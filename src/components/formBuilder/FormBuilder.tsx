@@ -1,11 +1,4 @@
-import React, {
-  ComponentProps,
-  useState,
-  useEffect,
-  useImperativeHandle,
-  forwardRef,
-  useMemo,
-} from 'react';
+import React, { ComponentProps, useState, useEffect, useImperativeHandle, forwardRef } from 'react';
 import * as yup from 'yup';
 import { Typography, Stack } from '@mui/material';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
@@ -14,7 +7,7 @@ import {
   TextareaDetailRow,
   DropdownDetailRow,
   DateDetailRow,
-  PeoplePickerDetailRow,
+  // PeoplePickerDetailRow,
   OptionsProps,
   TimePickerDetailRow,
   SwitchRow,
@@ -24,8 +17,8 @@ import {
 } from './FormInputs';
 import { get } from 'lodash';
 import FormRow from './FormRow';
-import { useUsers } from 'src/hooks/users/useUsers';
-import { User } from 'src/types/user';
+// import { useUsers } from 'src/hooks/users/useUsers';
+// import { User } from 'src/types/user';
 
 interface IFormBuilder {
   item: any;
@@ -48,7 +41,7 @@ export interface IInput {
     | 'dropdown'
     | 'dropdownMultiple'
     | 'date'
-    | 'peoplePicker'
+    // | 'peoplePicker'
     | 'time'
     | 'totalTime' // Returns total time as number in hours.minutes format ex: 8.5, can only return max of 24 hours
     | 'switch'
@@ -67,7 +60,7 @@ export interface IInput {
   max?: number; // User for number field
   isError?: boolean; // Used to determine if the row is valid
   customErrorText?: string; // Custom error message to display when isError is true
-  usersCustom?: User[]; // Custom users list for peoplePicker
+  // usersCustom?: User[]; // Custom users list for peoplePicker
   dateOptions?: Omit<
     ComponentProps<typeof DatePicker>,
     'value' | 'format' | 'onChange' | 'sx' | 'slotProps'
@@ -84,17 +77,17 @@ const FormBuilder = forwardRef((props: IFormBuilder, ref) => {
   const [inputErrors, setInputErrors] = useState({});
   const [isFirstSubmit, setIsFirstSubmit] = useState(true);
 
-  const { data: users } = useUsers();
-  const usersOptions = useMemo(() => {
-    return users?.sort((a, b) => a.Title.localeCompare(b.Title));
-  }, [users]);
+  // const { data: users } = useUsers();
+  // const usersOptions = useMemo(() => {
+  //   return users?.sort((a, b) => a.Title.localeCompare(b.Title));
+  // }, [users]);
 
   useEffect(() => {
     buildFormSchema();
   }, [inputs, item]);
 
   const handleUpdateItem = (value: string | number | null, detailKey: string) => {
-    updateItem && updateItem({ ...item, [detailKey]: value });
+    updateItem?.({ ...item, [detailKey]: value });
   };
 
   useImperativeHandle(ref, () => {
@@ -199,8 +192,7 @@ const FormBuilder = forwardRef((props: IFormBuilder, ref) => {
           isInputError = inputValue?.length ? false : true;
           nextAcc = { ...acc, [input.detailKey]: yup.array().min(1).required() };
           break;
-        case 'date':
-        case 'time':
+        case 'date': {
           isInputError = inputValue ? false : true;
 
           let datetimeSchema = yup.date();
@@ -212,6 +204,20 @@ const FormBuilder = forwardRef((props: IFormBuilder, ref) => {
           }
           nextAcc = { ...acc, [input.detailKey]: datetimeSchema.required() };
           break;
+        }
+        case 'time': {
+          isInputError = inputValue ? false : true;
+
+          let datetimeSchema = yup.date();
+          if (input?.dateOptions?.minDate) {
+            datetimeSchema = datetimeSchema.min(input.dateOptions.minDate);
+          }
+          if (input?.dateOptions?.maxDate) {
+            datetimeSchema = datetimeSchema.max(input.dateOptions.maxDate);
+          }
+          nextAcc = { ...acc, [input.detailKey]: datetimeSchema.required() };
+          break;
+        }
         case 'switch':
           isInputError = inputValue ? false : true;
           nextAcc = {
@@ -219,20 +225,20 @@ const FormBuilder = forwardRef((props: IFormBuilder, ref) => {
             [input.detailKey]: yup.boolean().oneOf([true], 'Field must be checked'),
           };
           break;
-        case 'peoplePicker':
-          isInputError = inputValue ? false : true;
-          if (typeof inputValue === 'number') {
-            nextAcc = {
-              ...acc,
-              [input.detailKey]: yup.number().required(),
-            };
-          } else {
-            nextAcc = {
-              ...acc,
-              [input.detailKey]: yup.string().required(),
-            };
-          }
-          break;
+        // case 'peoplePicker':
+        //   isInputError = inputValue ? false : true;
+        //   if (typeof inputValue === 'number') {
+        //     nextAcc = {
+        //       ...acc,
+        //       [input.detailKey]: yup.number().required(),
+        //     };
+        //   } else {
+        //     nextAcc = {
+        //       ...acc,
+        //       [input.detailKey]: yup.string().required(),
+        //     };
+        //   }
+        //   break;
         default:
           nextAcc = acc;
           break;
@@ -322,14 +328,14 @@ const FormBuilder = forwardRef((props: IFormBuilder, ref) => {
               return <DropdownMultipleDetailRow key={inputKey} {...inputProps} />;
             case 'date':
               return <DateDetailRow key={inputKey} {...inputProps} />;
-            case 'peoplePicker':
-              return (
-                <PeoplePickerDetailRow
-                  key={inputKey}
-                  users={inputProps.usersCustom ?? usersOptions}
-                  {...inputProps}
-                />
-              );
+            // case 'peoplePicker':
+            //   return (
+            //     <PeoplePickerDetailRow
+            //       key={inputKey}
+            //       users={inputProps.usersCustom ?? usersOptions}
+            //       {...inputProps}
+            //     />
+            //   );
             case 'time':
             case 'totalTime':
               return <TimePickerDetailRow key={inputKey} type={input.inputType} {...inputProps} />;

@@ -1,6 +1,7 @@
 import { createBrowserRouter } from 'react-router-dom';
 import App from './App';
-import { ShiftForm } from './pages/(shifts)/ShiftForm';
+import { Results } from './pages/(results)/Results';
+import { FormPage } from './pages/(shifts)/FormPage';
 
 export const router = createBrowserRouter([
   {
@@ -10,11 +11,11 @@ export const router = createBrowserRouter([
     children: [
       {
         path: 'form',
-        element: <ShiftForm />,
+        element: <FormPage />,
       },
       {
         path: 'results',
-        element: <div>Results shown here</div>,
+        element: <Results />,
       },
     ],
   },

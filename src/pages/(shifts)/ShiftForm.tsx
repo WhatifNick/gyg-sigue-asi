@@ -1,55 +1,139 @@
-import { useEffect, useState } from "react";
-import supabase from "src/supabase-client";
+import FormBuilder from 'src/components/formBuilder/FormBuilder';
+import { Shift } from 'src/types/shift';
 
-export const ShiftForm = () => {
-  const [shiftLeader, setShiftLeader] = useState("");
+interface ShiftFormProps {
+  shift: Shift | undefined;
+  setShift?: (shift: Shift | undefined) => void;
+  editMode?: boolean;
+  shiftFormRef?: any;
+}
 
-  useEffect(() => {
-    fetchShifts();
-  });
+export const ShiftForm = ({ shift, setShift, editMode = false, shiftFormRef }: ShiftFormProps) => {
+  const formId = 'shiftForm';
 
-  const submitShift = async () => {
-    const newShift = {
-      shift_leader: shiftLeader,
-      shift_date: new Date().toISOString(),
-      shift_type: 0,
-      under_4_min: 80,
-      over_8_min: 4,
-      miam: 33.3,
-      complaints: 1,
-      temps: true,
-      temps_desc: "temp test",
-      cleaning: false,
-      cleaning_desc: "cleaning test",
-      cash_variance: "Test cash variance",
-      notes: "Test notes",
-      score: 100,
-    };
-    const { data, error } = await supabase.from("shifts").insert([newShift]).single();
-    if (error) {
-      console.log(111, "error", error);
-    } else {
-      console.log(111, "data", data);
-      setShiftLeader("");
-    }
-    console.log(data, error);
-  };
-
-  const fetchShifts = async () => {
-    const { data, error } = await supabase.from("shifts").select("*");
-    console.log(222, data, error);
-  };
+  const formInputs = [
+    {
+      title: 'Shift Leader',
+      detailKey: 'shift_leader',
+      inputType: 'text' as const,
+      required: true,
+    },
+    {
+      title: 'Date',
+      detailKey: 'shift_date',
+      inputType: 'date' as const,
+      required: true,
+    },
+    {
+      title: 'Shift Type',
+      detailKey: 'shift_type',
+      inputType: 'dropdown' as const,
+      required: true,
+      options: [
+        { label: 'Open', value: 0 },
+        { label: 'Mid', value: 1 },
+        { label: 'Close', value: 2 },
+      ],
+    },
+    {
+      title: 'Under 4 Min %',
+      detailKey: 'under_4_min',
+      inputType: 'number' as const,
+      max: 100,
+      min: 0,
+      required: true,
+    },
+    {
+      title: 'Over 8 Min %',
+      detailKey: 'over_8_min',
+      inputType: 'number' as const,
+      max: 100,
+      min: 0,
+      required: true,
+    },
+    {
+      title: 'MIAM %',
+      detailKey: 'miam',
+      inputType: 'number' as const,
+      max: 100,
+      min: 0,
+      required: true,
+    },
+    {
+      title: 'Complaints',
+      detailKey: 'complaints',
+      inputType: 'number' as const,
+      min: 0,
+      required: true,
+    },
+    {
+      title: 'Temps',
+      detailKey: 'temps',
+      inputType: 'dropdown' as const,
+      required: true,
+      inputValue: shift?.temps === true ? 1 : shift?.temps === false ? 0 : undefined,
+      onInputChange: (value: number) => {
+        if (value === 1) setShift?.({ ...shift, temps: true } as Shift);
+        else setShift?.({ ...shift, temps: false } as Shift);
+      },
+      options: [
+        { label: 'Yes', value: 1 },
+        { label: 'No', value: 0 },
+      ],
+    },
+    {
+      title: 'Why was this not completed?',
+      detailKey: 'temps_desc',
+      inputType: 'textarea' as const,
+      hide: shift?.temps != false,
+      required: shift?.temps == false,
+      orientation: 'column',
+    },
+    {
+      title: 'Cleaning Tasks',
+      detailKey: 'cleaning',
+      inputType: 'dropdown' as const,
+      required: true,
+      inputValue: shift?.cleaning === true ? 1 : shift?.cleaning === false ? 0 : undefined,
+      onInputChange: (value: number) => {
+        if (value === 1) setShift?.({ ...shift, cleaning: true } as Shift);
+        else setShift?.({ ...shift, cleaning: false } as Shift);
+      },
+      options: [
+        { label: 'Yes', value: 1 },
+        { label: 'No', value: 0 },
+      ],
+    },
+    {
+      title: 'Why was this not completed?',
+      detailKey: 'cleaning_desc',
+      inputType: 'textarea' as const,
+      hide: shift?.cleaning != false,
+      required: shift?.cleaning == false,
+      orientation: 'column',
+    },
+    {
+      title: 'Cash Variance',
+      detailKey: 'cash_variance',
+      inputType: 'textarea' as const,
+      orientation: 'column',
+    },
+    {
+      title: 'Any notes?',
+      detailKey: 'notes',
+      inputType: 'textarea' as const,
+      orientation: 'column',
+    },
+  ];
 
   return (
-    <>
-      <input type="text" placeholder="Shift Leader" onChange={e => setShiftLeader(e.target.value)} value={shiftLeader} />
-      {/* <button onClick={async () => {
-      const { data, error } = await supabase
-        .from('shift_leader')
-        .insert([{ name: shiftLeader }]);
-      console.log(data, error);
-    }}>Add Shift Leader</button> */}
-      <button onClick={submitShift}>Submit Shift</button>
-    </>
+    <FormBuilder
+      ref={shiftFormRef}
+      item={shift}
+      updateItem={setShift}
+      inputs={formInputs}
+      editMode={editMode}
+      formId={formId}
+    />
   );
 };

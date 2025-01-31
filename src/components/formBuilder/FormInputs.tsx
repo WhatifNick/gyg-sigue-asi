@@ -2,7 +2,6 @@ import { ComponentProps, useEffect, useState } from 'react';
 import {
   Box,
   Chip,
-  Grid,
   Typography,
   Stack,
   OutlinedInput,
@@ -14,6 +13,7 @@ import {
   InputAdornment,
   Switch,
 } from '@mui/material';
+import Grid from '@mui/material/Grid2';
 import { Clear } from '@mui/icons-material';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { TimePicker } from '@mui/x-date-pickers/TimePicker';
@@ -22,7 +22,6 @@ import { formatDate } from 'src/utils/formatDate';
 import dayjs, { Dayjs } from 'dayjs';
 import { useMemo } from 'react';
 import 'dayjs/locale/en-gb';
-import { User } from 'src/types/user';
 
 interface InputDetailRowProps {
   title?: string;
@@ -40,6 +39,9 @@ interface TextDetailRowProps extends InputDetailRowProps {
   onInputChange?: (value: string | null | undefined, detailKey: string) => void;
 }
 
+const rightGridSize = 7;
+const leftGridSize = 5;
+
 export const TextDetailRow = (props: TextDetailRowProps) => {
   const {
     title,
@@ -55,18 +57,18 @@ export const TextDetailRow = (props: TextDetailRowProps) => {
 
   const handleValueChange = (e: any) => {
     const nextValue = e?.target?.value === '' ? null : e?.target?.value;
-    !!onInputChange && onInputChange(nextValue ?? null, detailKey);
+    onInputChange?.(nextValue ?? null, detailKey);
   };
 
   const handleClearClick = () => {
-    !!onInputChange && onInputChange(null, detailKey);
+    onInputChange?.(null, detailKey);
   };
 
   return (
     <>
       <Grid container sx={{ minHeight: '2rem', alignItems: 'center' }}>
         {title && (
-          <Grid item xs={4} sx={{ pr: '1rem' }}>
+          <Grid size={leftGridSize} sx={{ pr: '0.5rem' }}>
             <FormInputLabel
               title={title}
               variant="body2"
@@ -76,7 +78,7 @@ export const TextDetailRow = (props: TextDetailRowProps) => {
             />
           </Grid>
         )}
-        <Grid item xs={title ? 8 : 12} sx={{ alignSelf: 'center', pl: '1rem' }}>
+        <Grid size={title ? rightGridSize : 12} sx={{ alignSelf: 'center', pl: '0.5rem' }}>
           {editMode ? (
             <OutlinedInput
               fullWidth
@@ -164,19 +166,19 @@ export const NumberDetailRow = (props: NumberDetailRowProps) => {
       nextValue = nextValue ? parseFloat(nextValue.toFixed(0)) : null;
     }
 
-    !!onInputChange && onInputChange(nextValue ?? null, detailKey);
+    onInputChange?.(nextValue ?? null, detailKey);
   };
 
   const handleClearClick = () => {
     setErrorText('');
-    !!onInputChange && onInputChange(null, detailKey);
+    onInputChange?.(null, detailKey);
   };
 
   return (
     <>
       <Grid container sx={{ minHeight: '2rem', alignItems: 'center' }}>
         {title && (
-          <Grid item xs={4} sx={{ pr: '1rem' }}>
+          <Grid size={leftGridSize} sx={{ pr: '0.5rem' }}>
             <FormInputLabel
               title={title}
               variant="body2"
@@ -186,7 +188,7 @@ export const NumberDetailRow = (props: NumberDetailRowProps) => {
             />
           </Grid>
         )}
-        <Grid item xs={title ? 8 : 12} sx={{ alignSelf: 'center', pl: '1rem' }}>
+        <Grid size={title ? rightGridSize : 12} sx={{ alignSelf: 'center', pl: '0.5rem' }}>
           {editMode ? (
             <OutlinedInput
               fullWidth
@@ -270,26 +272,26 @@ export const DropdownDetailRow = (props: DropdownDetailRowProps) => {
 
   // Select component does like null values or 'out of range' values.
   // This sets the value to an empty string if values is null or options or choices are empty
-  const inputValue = !options?.length && !choices?.length ? '' : (value ?? '');
+  const inputValue = !options?.length && !choices?.length ? '' : value ?? '';
 
-  if (options?.length && !!value) {
+  if (options?.length) {
     displayValue = options?.find((option) => option?.value === value)?.label;
   }
 
   const handleValueChange = (e: any) => {
     const nextValue = e?.target?.value === '' ? null : e?.target?.value;
-    !!onInputChange && onInputChange(nextValue, detailKey);
+    onInputChange?.(nextValue, detailKey);
   };
 
   const handleClearClick = () => {
-    !!onInputChange && onInputChange(null, detailKey);
+    onInputChange?.(null, detailKey);
   };
 
   return (
     <>
       <Grid container sx={{ minHeight: '2rem', alignItems: 'center' }}>
         {title && (
-          <Grid item xs={4} sx={{ pr: '1rem' }}>
+          <Grid size={leftGridSize} sx={{ pr: '0.5rem' }}>
             <FormInputLabel
               title={title}
               variant="body2"
@@ -299,7 +301,7 @@ export const DropdownDetailRow = (props: DropdownDetailRowProps) => {
             />
           </Grid>
         )}
-        <Grid item xs={title ? 8 : 12} sx={{ alignSelf: 'center', pl: '1rem' }}>
+        <Grid size={title ? rightGridSize : 12} sx={{ alignSelf: 'center', pl: '0.5rem' }}>
           {editMode ? (
             <Select
               fullWidth
@@ -411,18 +413,18 @@ export const DropdownMultipleDetailRow = (props: DropdownMultipleDetailRowProps)
     const nextValue =
       typeof e?.target?.value === 'string' ? e?.target?.value?.split(',') : e?.target?.value;
 
-    !!onInputChange && onInputChange(nextValue, detailKey);
+    onInputChange?.(nextValue, detailKey);
   };
 
   const handleClearClick = () => {
-    !!onInputChange && onInputChange([], detailKey);
+    onInputChange?.([], detailKey);
   };
 
   return (
     <>
       <Grid container sx={{ alignItems: 'center' }}>
         {title && (
-          <Grid item xs={4} sx={{ pr: '1rem' }}>
+          <Grid size={leftGridSize} sx={{ pr: '0.5rem' }}>
             <FormInputLabel
               title={title}
               variant="body2"
@@ -432,7 +434,7 @@ export const DropdownMultipleDetailRow = (props: DropdownMultipleDetailRowProps)
             />
           </Grid>
         )}
-        <Grid item xs={title ? 8 : 12} sx={{ alignSelf: 'center', pl: '1rem' }}>
+        <Grid size={title ? rightGridSize : 12} sx={{ alignSelf: 'center', pl: '0.5rem' }}>
           {editMode ? (
             <Select
               fullWidth
@@ -582,14 +584,17 @@ export const TextareaDetailRow = (props: TextareaDetailRowProps) => {
     } else if (max) {
       setErrorText('');
     }
-    !!onInputChange && onInputChange(nextValue, detailKey);
+    onInputChange?.(nextValue, detailKey);
   };
 
   return (
     <>
       <Grid container>
         {title && (
-          <Grid item xs={orientation === 'column' ? 12 : 4} sx={{ pr: '1rem', mt: '0.25rem' }}>
+          <Grid
+            size={orientation === 'column' ? 12 : leftGridSize}
+            sx={{ pr: '0.5rem', mt: '0.25rem' }}
+          >
             <FormInputLabel
               title={title}
               variant="body2"
@@ -600,8 +605,7 @@ export const TextareaDetailRow = (props: TextareaDetailRowProps) => {
           </Grid>
         )}
         <Grid
-          item
-          xs={orientation === 'column' || !title ? 12 : 8}
+          size={orientation === 'column' || !title ? 12 : rightGridSize}
           sx={{
             alignSelf: 'center',
             pl: orientation === 'column' ? '0' : '1rem',
@@ -685,14 +689,16 @@ export const DateDetailRow = (props: DateDetailRowProps) => {
   } = props;
 
   const handleValueChange = (nextValue: any) => {
-    !!onInputChange && onInputChange(nextValue?.toISOString() ?? null, detailKey);
+    const formattedDate = dayjs(nextValue).format('YYYY-MM-DD');
+
+    onInputChange?.(formattedDate ?? null, detailKey);
   };
 
   return (
     <>
       <Grid container sx={{ minHeight: '2rem', alignItems: 'center' }}>
         {title && (
-          <Grid item xs={4} sx={{ pr: '1rem' }}>
+          <Grid size={leftGridSize} sx={{ pr: '0.5rem' }}>
             <FormInputLabel
               title={title}
               variant="body2"
@@ -702,7 +708,7 @@ export const DateDetailRow = (props: DateDetailRowProps) => {
             />
           </Grid>
         )}
-        <Grid item xs={title ? 8 : 12} sx={{ alignSelf: 'center', pl: '1rem' }}>
+        <Grid size={title ? rightGridSize : 12} sx={{ alignSelf: 'center', pl: '0.5rem' }}>
           {editMode ? (
             <Stack sx={{ width: '100%', overflow: 'hidden' }}>
               <DatePicker
@@ -792,7 +798,7 @@ export const DateRangeDetailRow = (props: DateRangeDetailRowProps) => {
     <>
       <Grid container sx={{ minHeight: '2rem', alignItems: 'center' }}>
         {title && (
-          <Grid item xs={4} sx={{ pr: '1rem' }}>
+          <Grid size={leftGridSize} sx={{ pr: '0.5rem' }}>
             <FormInputLabel
               title={title}
               variant="body2"
@@ -802,11 +808,11 @@ export const DateRangeDetailRow = (props: DateRangeDetailRowProps) => {
             />
           </Grid>
         )}
-        <Grid item xs={title ? 8 : 12} sx={{ alignSelf: 'center', pl: '1rem' }}>
+        <Grid size={title ? rightGridSize : 12} sx={{ alignSelf: 'center', pl: '0.5rem' }}>
           {editMode ? (
             <Stack sx={{ width: '100%', overflow: 'hidden', direction: 'row' }}>
               <Grid container spacing={1}>
-                <Grid item xs={6}>
+                <Grid size={6}>
                   <DatePicker
                     name="startDate"
                     value={startDateValue}
@@ -824,7 +830,7 @@ export const DateRangeDetailRow = (props: DateRangeDetailRowProps) => {
                     }}
                   />
                 </Grid>
-                <Grid item xs={6}>
+                <Grid size={6}>
                   <DatePicker
                     name="endDate"
                     value={endDateValue}
@@ -860,121 +866,121 @@ export const DateRangeDetailRow = (props: DateRangeDetailRowProps) => {
   );
 };
 
-interface PeoplePickerDetailRowProps extends InputDetailRowProps {
-  value: string | number | null | undefined;
-  onInputChange?: (value: string | number | null | undefined, detailKey: string) => void;
-  users: User[] | undefined;
-}
+// interface PeoplePickerDetailRowProps extends InputDetailRowProps {
+//   value: string | number | null | undefined;
+//   onInputChange?: (value: string | number | null | undefined, detailKey: string) => void;
+//   users: User[] | undefined;
+// }
 
-export const PeoplePickerDetailRow = (props: PeoplePickerDetailRowProps) => {
-  const {
-    title,
-    detailKey = '',
-    value,
-    users,
-    editMode = false,
-    onInputChange,
-    error,
-    isError,
-    customErrorText,
-    required,
-  } = props;
+// export const PeoplePickerDetailRow = (props: PeoplePickerDetailRowProps) => {
+//   const {
+//     title,
+//     detailKey = '',
+//     value,
+//     users,
+//     editMode = false,
+//     onInputChange,
+//     error,
+//     isError,
+//     customErrorText,
+//     required,
+//   } = props;
 
-  const selectedUser = useMemo(() => {
-    return users?.find((user) => user.Id === value);
-  }, [value, users]);
+//   const selectedUser = useMemo(() => {
+//     return users?.find((user) => user.Id === value);
+//   }, [value, users]);
 
-  const handleValueChange = (selectedUser: User | null) => {
-    const nextValue = selectedUser?.Id ?? null;
+//   const handleValueChange = (selectedUser: User | null) => {
+//     const nextValue = selectedUser?.Id ?? null;
 
-    !!onInputChange && onInputChange(nextValue, detailKey);
-  };
-  return (
-    <>
-      <Grid container sx={{ minHeight: '2rem', alignItems: 'center' }}>
-        {title && (
-          <Grid item xs={4} sx={{ pr: '1rem' }}>
-            <FormInputLabel
-              title={title}
-              variant="body2"
-              bold
-              editMode={editMode}
-              required={required}
-            />
-          </Grid>
-        )}
-        <Grid item xs={title ? 8 : 12} sx={{ alignSelf: 'center', pl: '1rem' }}>
-          {editMode ? (
-            <Autocomplete
-              size="small"
-              value={users?.find((user) => user.Id === value) ?? null}
-              options={users || []}
-              sx={{
-                width: '100%',
-                zIndex: 'tooltip',
-                '& .MuiInputBase-root': {
-                  fontSize: '1rem',
-                  p: '0.25rem 0.75rem !important',
-                },
-                '& .MuiInputBase-input': {
-                  padding: '0 !important',
-                },
-              }}
-              getOptionLabel={(option: User) => `${option?.Title ?? ''}`}
-              renderOption={(props, user) => {
-                return (
-                  <li {...props} key={user.Id} style={{ textWrap: 'nowrap' }}>
-                    {user?.Title}
-                  </li>
-                );
-              }}
-              filterOptions={(options, state) => {
-                return options.filter((option) => {
-                  // Uncomment if needed later when there are many users
-                  // if (state.inputValue.length < 3) return false;
-                  return option?.Title?.toLowerCase()?.includes(state.inputValue.toLowerCase());
-                });
-              }}
-              noOptionsText="No match found"
-              renderInput={(params) => (
-                <>
-                  <TextField
-                    {...params}
-                    variant="outlined"
-                    size="small"
-                    sx={{
-                      width: '100%',
-                      '& .MuiInputBase-input.Mui-disabled': {
-                        WebkitTextFillColor: '#444',
-                        color: '#444',
-                      },
-                    }}
-                    InputLabelProps={{
-                      style: { fontSize: '1rem' },
-                      shrink: true,
-                    }}
-                    error={error || isError}
-                  />
-                </>
-              )}
-              onChange={(_, data) => data && handleValueChange(data)}
-              // Sets the value to null if the user clears the input or clicks the clear button
-              onInputChange={(_, value) => !value && handleValueChange(null)}
-              disableClearable={required}
-            />
-          ) : (
-            <Typography sx={{ fontSize: '1rem' }}>{selectedUser?.Title}</Typography>
-          )}
-        </Grid>
-      </Grid>
-      {(error || isError) && customErrorText && (
-        <Typography variant="caption" color="error" textAlign="right" sx={{ mt: '0 !important' }}>
-          *{customErrorText}
-        </Typography>
-      )}
-    </>
-  );
-};
+//     !!onInputChange && onInputChange(nextValue, detailKey);
+//   };
+//   return (
+//     <>
+//       <Grid container sx={{ minHeight: '2rem', alignItems: 'center' }}>
+//         {title && (
+//           <Grid size={leftGridSize} sx={{ pr: '0.5rem' }}>
+//             <FormInputLabel
+//               title={title}
+//               variant="body2"
+//               bold
+//               editMode={editMode}
+//               required={required}
+//             />
+//           </Grid>
+//         )}
+//         <Grid size={title ? rightGridSize : 12} sx={{ alignSelf: 'center', pl: '0.5rem' }}>
+//           {editMode ? (
+//             <Autocomplete
+//               size="small"
+//               value={users?.find((user) => user.Id === value) ?? null}
+//               options={users || []}
+//               sx={{
+//                 width: '100%',
+//                 zIndex: 'tooltip',
+//                 '& .MuiInputBase-root': {
+//                   fontSize: '1rem',
+//                   p: '0.25rem 0.75rem !important',
+//                 },
+//                 '& .MuiInputBase-input': {
+//                   padding: '0 !important',
+//                 },
+//               }}
+//               getOptionLabel={(option: User) => `${option?.Title ?? ''}`}
+//               renderOption={(props, user) => {
+//                 return (
+//                   <li {...props} key={user.Id} style={{ textWrap: 'nowrap' }}>
+//                     {user?.Title}
+//                   </li>
+//                 );
+//               }}
+//               filterOptions={(options, state) => {
+//                 return options.filter((option) => {
+//                   // Uncomment if needed later when there are many users
+//                   // if (state.inputValue.length < 3) return false;
+//                   return option?.Title?.toLowerCase()?.includes(state.inputValue.toLowerCase());
+//                 });
+//               }}
+//               noOptionsText="No match found"
+//               renderInput={(params) => (
+//                 <>
+//                   <TextField
+//                     {...params}
+//                     variant="outlined"
+//                     size="small"
+//                     sx={{
+//                       width: '100%',
+//                       '& .MuiInputBase-input.Mui-disabled': {
+//                         WebkitTextFillColor: '#444',
+//                         color: '#444',
+//                       },
+//                     }}
+//                     InputLabelProps={{
+//                       style: { fontSize: '1rem' },
+//                       shrink: true,
+//                     }}
+//                     error={error || isError}
+//                   />
+//                 </>
+//               )}
+//               onChange={(_, data) => data && handleValueChange(data)}
+//               // Sets the value to null if the user clears the input or clicks the clear button
+//               onInputChange={(_, value) => !value && handleValueChange(null)}
+//               disableClearable={required}
+//             />
+//           ) : (
+//             <Typography sx={{ fontSize: '1rem' }}>{selectedUser?.Title}</Typography>
+//           )}
+//         </Grid>
+//       </Grid>
+//       {(error || isError) && customErrorText && (
+//         <Typography variant="caption" color="error" textAlign="right" sx={{ mt: '0 !important' }}>
+//           *{customErrorText}
+//         </Typography>
+//       )}
+//     </>
+//   );
+// };
 
 interface TimePickerDetailRowProps extends InputDetailRowProps {
   value: string | number | null | undefined;
@@ -1002,7 +1008,7 @@ export const TimePickerDetailRow = (props: TimePickerDetailRowProps) => {
       const totalTimeInHours = nextValue.$H + nextValue.$m / 60;
       nextNextValue = totalTimeInHours;
     }
-    !!onInputChange && onInputChange(nextNextValue ?? null, detailKey);
+    onInputChange?.(nextNextValue ?? null, detailKey);
   };
 
   let inputValue = value ? dayjs(value) : null;
@@ -1024,7 +1030,7 @@ export const TimePickerDetailRow = (props: TimePickerDetailRowProps) => {
     <>
       <Grid container sx={{ minHeight: '2rem', alignItems: 'center' }}>
         {title && (
-          <Grid item xs={4} sx={{ pr: '1rem' }}>
+          <Grid size={leftGridSize} sx={{ pr: '0.5rem' }}>
             <FormInputLabel
               title={title}
               variant="body2"
@@ -1034,7 +1040,7 @@ export const TimePickerDetailRow = (props: TimePickerDetailRowProps) => {
             />
           </Grid>
         )}
-        <Grid item xs={title ? 8 : 12} sx={{ alignSelf: 'center', pl: '1rem' }}>
+        <Grid size={title ? rightGridSize : 12} sx={{ alignSelf: 'center', pl: '0.5rem' }}>
           {editMode ? (
             <TimePicker
               ampm={type === 'time' ? true : false}
@@ -1093,13 +1099,13 @@ export const SwitchRow = (props: SwitchRowProps) => {
     },
   };
   const handleSwitchChange = (event: any, checked: boolean) => {
-    !!onInputChange && onInputChange(checked, detailKey);
+    onInputChange?.(checked, detailKey);
   };
   return (
     <>
       <Grid container sx={{ minHeight: '2rem', alignItems: 'center' }}>
         {title && (
-          <Grid item xs={4} sx={{ pr: '1rem' }}>
+          <Grid size={leftGridSize} sx={{ pr: '0.5rem' }}>
             <FormInputLabel
               title={title}
               variant="body2"
@@ -1109,7 +1115,7 @@ export const SwitchRow = (props: SwitchRowProps) => {
             />
           </Grid>
         )}
-        <Grid item xs={title ? 8 : 12} sx={{ alignSelf: 'center', pl: '1rem' }}>
+        <Grid size={title ? rightGridSize : 12} sx={{ alignSelf: 'center', pl: '0.5rem' }}>
           {editMode ? (
             <Switch
               sx={isError || error ? switchErrorStyles : undefined}
@@ -1163,14 +1169,14 @@ export const AutocompleteDetailRow = (props: AutocompleteDetailRowProps) => {
   const handleValueChange = (selectedOption: any | null) => {
     const nextValue = selectedOption?.value ?? null;
 
-    !!onInputChange && onInputChange(nextValue, detailKey);
+    onInputChange?.(nextValue, detailKey);
   };
 
   return (
     <>
       <Grid container sx={{ minHeight: '2rem', alignItems: 'center' }}>
         {!!title && (
-          <Grid item xs={4} sx={{ pr: '1rem' }}>
+          <Grid size={leftGridSize} sx={{ pr: '0.5rem' }}>
             <FormInputLabel
               title={title}
               variant="body2"
@@ -1180,7 +1186,7 @@ export const AutocompleteDetailRow = (props: AutocompleteDetailRowProps) => {
             />
           </Grid>
         )}
-        <Grid item xs={title ? 8 : 12} sx={{ alignSelf: 'center', pl: '1rem' }}>
+        <Grid size={title ? rightGridSize : 12} sx={{ alignSelf: 'center', pl: '0.5rem' }}>
           {editMode ? (
             <Autocomplete
               size="small"

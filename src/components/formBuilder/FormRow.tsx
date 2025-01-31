@@ -1,5 +1,6 @@
 import React, { ReactNode } from 'react';
-import { Grid, TypographyTypeMap, Typography } from '@mui/material';
+import { TypographyTypeMap, Typography } from '@mui/material';
+import Grid from '@mui/material/Grid2';
 import FormInputLabel from './FormInputLabel';
 
 interface Props {
@@ -20,10 +21,10 @@ export default function FormRow(props: Props) {
   return (
     <>
       <Grid container sx={{ alignItems: 'center' }}>
-        <Grid item xs={4} sx={{ alignSelf: 'center', pr: '1rem' }}>
+        <Grid size={4} sx={{ alignSelf: 'center', pr: '1rem' }}>
           <FormInputLabel {...labelProps} />
         </Grid>
-        <Grid item xs={8} sx={{ alignSelf: 'center', pl: '1rem' }}>
+        <Grid size={8} sx={{ alignSelf: 'center', pl: '1rem' }}>
           {children}
         </Grid>
       </Grid>
