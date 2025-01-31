@@ -6,7 +6,7 @@ import { Shift } from 'src/types/shift';
 import chihuahua from 'src/assets/chihuahua.gif';
 
 export const FormPage = () => {
-  const shiftFormRef = useRef(null);
+  const shiftFormRef = useRef<{ isValid: () => Promise<boolean> } | null>(null);
   const [shift, setShift] = useState<Shift | undefined>(undefined);
   const [score, setScore] = useState<number>(0);
 
