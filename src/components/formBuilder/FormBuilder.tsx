@@ -1,4 +1,11 @@
-import React, { ComponentProps, useState, useEffect, useImperativeHandle, forwardRef } from 'react';
+import React, {
+  ComponentProps,
+  useState,
+  useEffect,
+  useImperativeHandle,
+  forwardRef,
+  ReactNode,
+} from 'react';
 import * as yup from 'yup';
 import { Typography, Stack } from '@mui/material';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
@@ -29,7 +36,7 @@ interface IFormBuilder {
 }
 
 export interface IInput {
-  title?: string; // Display name for the input label
+  title?: string | ReactNode; // Display name for the input label
   detailKey?: string; // Only use if different from fieldName. Used to update the key on the item or gets returned by onInputChange
   inputType:
     | 'text'

@@ -1,8 +1,9 @@
+import { ReactNode } from 'react';
 import { Box, IconButton, Tooltip, Typography, TypographyTypeMap } from '@mui/material';
 import { Help } from '@mui/icons-material';
 
 interface Props {
-  title?: string;
+  title?: string | ReactNode;
   tooltip?: string;
   bold?: boolean;
   variant?: TypographyTypeMap['props']['variant'];

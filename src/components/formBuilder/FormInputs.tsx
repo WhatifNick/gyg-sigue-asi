@@ -1,4 +1,4 @@
-import { ComponentProps, useEffect, useState } from 'react';
+import { ComponentProps, ReactNode, useEffect, useState } from 'react';
 import {
   Box,
   Chip,
@@ -24,7 +24,7 @@ import { useMemo } from 'react';
 import 'dayjs/locale/en-gb';
 
 interface InputDetailRowProps {
-  title?: string;
+  title?: string | ReactNode;
   detailKey?: string;
   mb?: string | number;
   editMode?: boolean;
@@ -1120,7 +1120,7 @@ export const SwitchRow = (props: SwitchRowProps) => {
             <Switch
               sx={isError || error ? switchErrorStyles : undefined}
               inputProps={{
-                'aria-label': title,
+                'aria-label': typeof title === 'string' ? title : '',
                 'aria-invalid': isError || error,
               }}
               checked={value ?? false}

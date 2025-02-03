@@ -4,7 +4,7 @@ import Grid from '@mui/material/Grid2';
 import FormInputLabel from './FormInputLabel';
 
 interface Props {
-  title?: string;
+  title?: string | ReactNode;
   tooltip?: string;
   children?: ReactNode;
   bold?: boolean;
