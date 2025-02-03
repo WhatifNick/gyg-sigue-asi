@@ -35,8 +35,17 @@ export const ShiftForm = ({ shift, setShift, editMode = false, shiftFormRef }: S
         { label: 'Close', value: 2 },
       ],
     },
+    // TODO: Add Question based on shift type here once Alex writes them
     {
-      title: 'Under 4 Min %',
+      title: (
+        <a
+          href="https://app.powerbi.com/MobileRedirect.html?groupObjectId=a6b5220a-f023-41ca-84b6-ec23e5582424&reportPage=ReportSection9a839f0ed7354677c674&ctid=31d4ca9d-2cb3-47ef-869e-c4f106c5a438&Context=share-report&reportObjectId=eaee2ce3-4cf4-4f38-a2af-3bf50cf82a93&bookmarkGuid=15bb9731-6a64-4bca-b900-be7a4800c3cb&action=OpenReport&pbi_source=mobile_ios"
+          target="_blank"
+          style={{ color: '#000' }}
+        >
+          Under 4 Min %
+        </a>
+      ),
       detailKey: 'under_4_min',
       inputType: 'number' as const,
       max: 100,
@@ -44,7 +53,15 @@ export const ShiftForm = ({ shift, setShift, editMode = false, shiftFormRef }: S
       required: true,
     },
     {
-      title: 'Over 8 Min %',
+      title: (
+        <a
+          href="https://app.powerbi.com/MobileRedirect.html?reportPage=ReportSectionda560baa0cb0ae1186fe&reportObjectId=eaee2ce3-4cf4-4f38-a2af-3bf50cf82a93&Context=share-report&ctid=31d4ca9d-2cb3-47ef-869e-c4f106c5a438&bookmarkGuid=72f7c55d-6b46-4628-a2a4-2564ce535244&groupObjectId=a6b5220a-f023-41ca-84b6-ec23e5582424&action=OpenReport&pbi_source=mobile_ios"
+          target="_blank"
+          style={{ color: '#000' }}
+        >
+          Over 8 Min %
+        </a>
+      ),
       detailKey: 'over_8_min',
       inputType: 'number' as const,
       max: 100,
@@ -52,7 +69,15 @@ export const ShiftForm = ({ shift, setShift, editMode = false, shiftFormRef }: S
       required: true,
     },
     {
-      title: 'MIAM %',
+      title: (
+        <a
+          href="https://app.powerbi.com/MobileRedirect.html?ctid=31d4ca9d-2cb3-47ef-869e-c4f106c5a438&bookmarkGuid=67fe9dd5-bacc-4bc3-98cc-41ef8a6e1894&groupObjectId=a6b5220a-f023-41ca-84b6-ec23e5582424&Context=share-report&reportObjectId=207ea9c8-3102-4059-a5b6-11cbdf7abca4&reportPage=ReportSectionb389f7a9ec3cc5fb91c0&action=OpenReport&pbi_source=mobile_ios"
+          target="_blank"
+          style={{ color: '#000' }}
+        >
+          MIAM %
+        </a>
+      ),
       detailKey: 'miam',
       inputType: 'number' as const,
       max: 100,

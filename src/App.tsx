@@ -27,17 +27,17 @@ function App() {
   return (
     <>
       <div id="App">
+        {/* Navbar/Header */}
         <div
+          id="header"
           style={{
             display: 'flex',
             justifyContent: 'space-between',
             alignItems: 'center',
             backgroundColor: '#ffd204',
-            margin: '-1rem -1.5rem 1rem -1.5rem',
             position: 'relative',
             height: '3rem',
             zIndex: 1001,
-            padding: '0.5rem 1rem 0rem 1rem',
           }}
         >
           <div style={{ display: 'flex', gap: '1rem', marginLeft: '1rem' }}>
@@ -45,7 +45,9 @@ function App() {
             <NavLink to="/results" label="Results" />
           </div>
         </div>
-        <Outlet />
+        <div id="content" style={{ padding: '0.5rem' }}>
+          <Outlet />
+        </div>
       </div>
     </>
   );

@@ -178,21 +178,30 @@ export const Results = () => {
                     style={styles.td}
                     onClick={() => openShifts.length && setSelectedShifts(openShifts)}
                   >
-                    <div>{mostRecentOpenShift?.score}</div>
+                    <div>
+                      {typeof mostRecentOpenShift?.score === 'number' &&
+                        Math.round(mostRecentOpenShift?.score)}
+                    </div>
                     <div>{mostRecentOpenShift?.shift_leader}</div>
                   </td>
                   <td
                     style={styles.td}
                     onClick={() => midShifts.length && setSelectedShifts(midShifts)}
                   >
-                    <div>{mostRecentMidShift?.score}</div>
+                    <div>
+                      {typeof mostRecentMidShift?.score === 'number' &&
+                        Math.round(mostRecentMidShift?.score)}
+                    </div>
                     <div>{mostRecentMidShift?.shift_leader}</div>
                   </td>
                   <td
                     style={styles.td}
                     onClick={() => closeShifts.length && setSelectedShifts(closeShifts)}
                   >
-                    <div>{mostRecentCloseShift?.score}</div>
+                    <div>
+                      {typeof mostRecentCloseShift?.score === 'number' &&
+                        Math.round(mostRecentCloseShift?.score)}
+                    </div>
                     <div>{mostRecentCloseShift?.shift_leader}</div>
                   </td>
                 </tr>
@@ -205,7 +214,9 @@ export const Results = () => {
         isOpen={selectedShifts.length > 0}
         onCancel={() => setSelectedShifts([])}
         cancelBtnText="close"
-        headerText={`Score: ${selectedShifts[selectedShifts.length - 1]?.score}`}
+        headerText={`Score: ${parseFloat(
+          selectedShifts[selectedShifts.length - 1]?.score?.toFixed(1)
+        )}`}
       >
         {/* <div style={{ textAlign: 'center' }}>
           <h2>Score: {selectedShifts[selectedShifts.length - 1]?.score}</h2>
